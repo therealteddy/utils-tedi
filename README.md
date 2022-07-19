@@ -1,4 +1,4 @@
-# Utils-Tedi
+# Utils-Ted
 
 An archive of the scripts that i've written over the years for an automated linux experience
 
