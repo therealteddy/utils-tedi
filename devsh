@@ -1,0 +1,115 @@
+#!/bin/sh 
+# --------------------------------------------------------------------------------------------------------------------------------------------------- #
+#                                                  [===========] [==========] [===========\
+#                                                       [|]      [|]          [|]         [|] [===]
+#                                                       [|]      [|]          [|]         [|]  [|]
+#                                                       [|]      [=======]    [|]         [|]  [|]
+#                                                       [|]      [|]          [|]         [|]  [|]
+#                                                       [|]      [|]          [|]         [|]  [|]
+#                                                       [|]      [==========] [|==========//  [===i] Github: https://github.com/tedi/
+# --------------------------------------------------------------------------------------------------------------------------------------------------- #
+
+devdir="/home/$USER/dev/"
+testdirs="$(/bin/ls $testdir)" 
+wd=$(pwd)
+PROMPT="$/>"
+EDITOR=vim
+GIT=github.com 
+
+echo -n $PROMPT
+
+while read line 
+do
+	echo -n $PROMPT
+
+	if [ "$line" == "list" ]; then 
+		clear	
+		echo $testdirs
+		echo -n $PROMPT
+	fi
+
+	if [ "$line" == "todo" ]; then 
+		clear 
+		echo -n "Project Dir Name: " 
+		read line1
+		cd "$devdir"/"$line1"/
+		exec $EDITOR TODO.md
+	fi
+
+	if [ "$line" == "readit" ]; then 
+		clear
+		echo -n "Project Dir Name: "
+		read line9 #
+		cd "$devdir"/"$line9"/ 
+		exec $EDITOR README.md
+	fi
+
+	if [ "$line" == "config dev" ]; then
+		clear 
+		echo "Configure your development environment:- "
+		echo -n "dev/> "
+		read line2
+		if [ "$line2" == "help" ]; then 
+			echo "Commands (i)set editor  (ii)set dev-dir (iii)set git-host"
+			echo -n "dev/>"
+			read line3
+			if [ "$line3" == "set editor" ]; then 
+				echo -n "Set text editor: "	
+				read line4	
+				EDITOR="$line4"
+				echo -n $PROMPT
+				fi
+			if [ "$line3" == "set dev-dir" ]; then 
+				echo -n "Set your development directory: " 
+				read line5 
+				devdir="$line5"
+				testdirs=$(/bin/ls $devdir) 
+				echo -n $PROMPT	
+			fi
+			if [ "$line3" == "set git-host" ]; then 
+				echo -n "Enter Git Host (default: github.com): "
+				read line8 
+				GIT=$line8
+				echo -n $PROMPT
+			fi
+				
+		fi
+	fi
+	if [ "$line" == "config list" ]; then
+		clear
+		echo -n "Development directory: "
+		echo $devdir
+		echo -n "Editor: " 
+		echo $EDITOR
+		echo -n "Git Host: " 
+		echo $GIT
+	fi 
+
+	if [ "$line" == "exit" ]; then 
+		exit 0
+	fi
+
+	if [ "$line" == "help" ]; then 
+		clear
+		echo "config dev - To configure your development environment" 
+		echo "config list - List available configuration" 
+		echo "exit - Quit out" 
+		echo "list - List directories in the dev-dir" 
+		echo "todo - To open up todo.md in your project directory in your prefered editor [Defaults to vim]"
+		echo "help - Display this message || Works also on config dev-dir"
+		echo "readit - Read the README.md on your project directory" 
+		echo "get-project - Clone a repository for from the git" 
+		echo -n $PROMPT
+	fi
+
+	if [ "$line" == "get-project" ]; then 
+		clear
+		echo -n "Enter git username: "
+		read line6
+		echo -n "Enter project name: "
+		read line7 
+		exec git clone https://$GIT/$line6/$line7
+		echo -n $PROMPT
+	fi
+
+done
